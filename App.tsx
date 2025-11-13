@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar, Platform } from 'react-native';
 
 // Store & Theme
 import { useAppStore } from './src/store/useAppStore';
@@ -19,8 +20,16 @@ const App = () => {
     setTheme(isDarkMode ? darkTheme : lightTheme);
   }, [isDarkMode]);
 
+  const statusBarBgColor = theme.colors.background;
+  const statusBarStyle = isDarkMode ? 'light-content' : 'dark-content';
+
   return (
     <SafeAreaProvider>
+      <StatusBar
+        backgroundColor={statusBarBgColor}
+        barStyle={statusBarStyle}
+        translucent={Platform.OS === 'android' ? false : true}
+      />
       <NavigationContainer>
         <RootNavigator theme={theme} />
       </NavigationContainer>

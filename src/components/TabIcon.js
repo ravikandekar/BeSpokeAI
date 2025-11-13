@@ -1,55 +1,36 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const TabIcon = ({ focused, color, size, icon }) => {
-  const getIcon = () => {
+  const getIconName = () => {
     switch (icon) {
       case 'dashboard':
-        return focused ? '◈' : '◇';
+        return focused ? 'grid' : 'grid-outline';
       case 'calls':
-        return focused ? '☎' : '◯';
+        return focused ? 'call' : 'call-outline';
       case 'people':
-        return focused ? '◉' : '○';
+        return focused ? 'people' : 'people-outline';
       case 'positive':
-        return focused ? '✦' : '✧';
+        return focused ? 'thumbs-up' : 'thumbs-up-outline';
       case 'settings':
-        return focused ? '⚙' : '○';
+        return focused ? 'settings' : 'settings-outline';
       default:
-        return '○';
-    }
-  };
-
-  const getIconSize = () => {
-    switch (icon) {
-      case 'dashboard':
-        return size * 0.9;
-      case 'calls':
-        return size * 1.1;
-      case 'people':
-        return size * 0.8;
-      case 'positive':
-        return size * 0.9;
-      case 'settings':
-        return size * 1.0;
-      default:
-        return size;
+        return 'ellipse-outline';
     }
   };
 
   return (
     <View style={styles.iconContainer}>
-      <Text style={[
-        styles.icon, 
-        { 
-          color, 
-          fontSize: getIconSize(),
-          textShadowColor: focused ? color : 'transparent',
-          textShadowOffset: { width: 0, height: 0 },
-          textShadowRadius: focused ? 3 : 0,
-        }
-      ]}>
-        {getIcon()}
-      </Text>
+      <Icon
+        name={getIconName()}
+        size={size || 24}
+        color={color}
+        style={[
+          styles.icon,
+          focused && styles.iconFocused
+        ]}
+      />
     </View>
   );
 };
@@ -61,9 +42,10 @@ const styles = StyleSheet.create({
     minHeight: 24,
   },
   icon: {
-    fontSize: 20,
     textAlign: 'center',
-    fontWeight: '600',
+  },
+  iconFocused: {
+    transform: [{ scale: 1.1 }],
   },
 });
 

@@ -41,14 +41,7 @@ export const SplashStackNavigator = ({ theme }) => (
 export const AuthStackNavigator = ({ theme }) => (
   <Stack.Navigator
     screenOptions={{
-      header: ({ navigation, route }) => (
-        <CustomHeader
-          title={route.name === 'Login' ? 'Sign In' : 'Domain Setup'}
-          backgroundColor={theme.colors.surface}
-          textColor={theme.colors.text}
-          showBackButton={route.name === 'Login'}
-        />
-      ),
+      headerShown: false,
     }}
   >
     <Stack.Screen name="DomainModal">
@@ -181,6 +174,7 @@ export const AppStackNavigator = ({ theme }) => (
     <Tab.Screen
       name="SettingsTab"
       options={{
+        
         tabBarLabel: 'Settings',
         tabBarIcon: ({ color, size, focused }) => (
           <TabIcon icon="settings" color={color} size={size} focused={focused} />
@@ -220,10 +214,13 @@ export const RootNavigator = ({ theme }) => {
         setUser(user);
       }
 
-      setIsDarkMode(themeMode);
+      // Default to dark mode if no theme mode is stored
+      setIsDarkMode(themeMode !== null && themeMode !== undefined ? themeMode : true);
       setIsLoggedIn(isLoggedInStored);
     } catch (e) {
       console.error('Failed to restore session', e);
+      // Set dark mode as default on error
+      setIsDarkMode(true);
     } finally {
       setInitializing(false);
       setTimeout(() => setShowSplash(false), 2500);

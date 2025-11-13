@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, StyleSheet, Platform, View } from 'react-native';
+import { StatusBar as RNStatusBar, StyleSheet, Platform, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const CustomStatusBar = ({ 
@@ -10,18 +10,33 @@ export const CustomStatusBar = ({
   const insets = useSafeAreaInsets();
 
   if (hidden) {
-    return <StatusBar hidden={hidden} />;
+    return <RNStatusBar hidden={hidden} />;
   }
 
+  // For Android, we need to set backgroundColor directly
+  // For iOS, we use a View with the background color
+  if (Platform.OS === 'android') {
+    return (
+      <>
+        <RNStatusBar
+          backgroundColor={backgroundColor}
+          barStyle={barStyle}
+          translucent={false}
+        />
+      </>
+    );
+  }
+
+  // For iOS, we need a View to match the background color
   return (
     <View style={[styles.statusBarContainer, { 
       backgroundColor, 
-      height: insets.top > 0 ? insets.top : Platform.OS === 'ios' ? 44 : 24 
+      height: insets.top > 0 ? insets.top : 44 
     }]}>
-      <StatusBar
-        backgroundColor={backgroundColor}
+      <RNStatusBar
         barStyle={barStyle}
         translucent={false}
+        backgroundColor={backgroundColor}
       />
     </View>
   );

@@ -11,9 +11,11 @@ const Button = ({
   loading = false,
   disabled = false,
   icon,
+  gradient = false,
 }) => {
   const getBackgroundColor = () => {
     if (disabled) return theme.colors.disabled;
+    if (gradient) return 'transparent'; // Gradient will handle background
     switch (variant) {
       case 'primary':
         return theme.colors.primary;
@@ -57,7 +59,7 @@ const Button = ({
       case 'lg':
         return 18;
       default:
-        return 14;
+        return 16;
     }
   };
 
@@ -76,6 +78,106 @@ const Button = ({
     return variant === 'outline' ? 1 : 0;
   };
 
+  const buttonContent = (
+    <>
+      {loading ? (
+        <ActivityIndicator color={getTextColor()} size="small" />
+      ) : (
+        <View style={styles.buttonContent}>
+          {icon && <Text style={[styles.icon, { color: getTextColor() }]}>{icon}</Text>}
+          <Text
+            style={[
+              styles.text,
+              {
+                color: getTextColor(),
+                fontSize: getFontSize(),
+                marginLeft: icon ? 8 : 0,
+                fontWeight: gradient ? '700' : '700',
+                letterSpacing: gradient ? 1 : 0.3,
+              },
+            ]}
+          >
+            {title}
+          </Text>
+        </View>
+      )}
+    </>
+  );
+
+  if (gradient && !disabled && !loading) {
+    // Gradient effect using multiple layers
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        disabled={loading || disabled}
+        activeOpacity={0.8}
+        style={[
+          styles.button,
+          {
+            paddingVertical: 0,
+            paddingHorizontal: 0,
+          },
+          fullWidth && styles.fullWidth,
+        ]}
+      >
+        <View
+          style={[
+            styles.gradientContainer,
+            {
+              borderRadius: theme.borderRadius.md,
+              paddingVertical: getPaddingVertical(),
+              paddingHorizontal: size === 'sm' ? 16 : size === 'lg' ? 32 : 24,
+            },
+          ]}
+        >
+          {/* Base blue color */}
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                backgroundColor: '#3b82f6',
+                borderRadius: theme.borderRadius.md,
+              },
+            ]}
+          />
+          {/* Gradient overlay - teal from right */}
+          <View
+            style={[
+              {
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                bottom: 0,
+                left: '40%',
+                backgroundColor: '#06b6d4',
+                borderRadius: theme.borderRadius.md,
+              },
+            ]}
+          />
+          {/* Smooth transition layer */}
+          <View
+            style={[
+              {
+                position: 'absolute',
+                right: '30%',
+                top: 0,
+                bottom: 0,
+                width: '30%',
+                backgroundColor: '#06b6d4',
+                opacity: 0.6,
+                borderRadius: theme.borderRadius.md,
+              },
+            ]}
+          />
+          {/* Content */}
+          <View style={styles.gradientContent}>
+            {buttonContent}
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -93,25 +195,7 @@ const Button = ({
         fullWidth && styles.fullWidth,
       ]}
     >
-      {loading ? (
-        <ActivityIndicator color={getTextColor()} size="small" />
-      ) : (
-        <View style={styles.buttonContent}>
-          {icon && <Text style={[styles.icon, { color: getTextColor() }]}>{icon}</Text>}
-          <Text
-            style={[
-              styles.text,
-              {
-                color: getTextColor(),
-                fontSize: getFontSize(),
-                marginLeft: icon ? 8 : 0,
-              },
-            ]}
-          >
-            {title}
-          </Text>
-        </View>
-      )}
+      {buttonContent}
     </TouchableOpacity>
   );
 };
@@ -129,9 +213,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 3,
+    overflow: 'hidden',
   },
   fullWidth: {
     width: '100%',
+  },
+  gradientContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  gradientContent: {
+    zIndex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonContent: {
     flexDirection: 'row',

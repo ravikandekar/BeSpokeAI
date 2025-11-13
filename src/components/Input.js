@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Input = ({
   theme,
@@ -14,9 +15,52 @@ const Input = ({
   icon,
   onIconPress,
   editable = true,
+  loginStyle = false,
+  showPasswordToggle = false,
+  onTogglePassword,
+  showPassword: externalShowPassword,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [showPassword, setShowPassword] = useState(!secureTextEntry);
+  const [internalShowPassword, setInternalShowPassword] = useState(!secureTextEntry);
+
+  // Use external showPassword if provided, otherwise use internal state
+  const showPassword = externalShowPassword !== undefined ? externalShowPassword : internalShowPassword;
+
+  const handleTogglePassword = () => {
+    if (onTogglePassword) {
+      onTogglePassword();
+    } else {
+      setInternalShowPassword(!internalShowPassword);
+    }
+  };
+
+  const getBackgroundColor = () => {
+    if (loginStyle) {
+      return '#ffffff';
+    }
+    return theme.colors.cardBg;
+  };
+
+  const getTextColor = () => {
+    if (loginStyle) {
+      return '#000000';
+    }
+    return theme.colors.text;
+  };
+
+  const getPlaceholderColor = () => {
+    if (loginStyle) {
+      return '#9ca3af';
+    }
+    return theme.colors.textTertiary;
+  };
+
+  const getBorderColor = () => {
+    if (loginStyle) {
+      return error ? theme.colors.error : isFocused ? theme.colors.primary : '#e5e7eb';
+    }
+    return error ? theme.colors.error : isFocused ? theme.colors.primary : theme.colors.border;
+  };
 
   return (
     <View style={styles.container}>
@@ -25,8 +69,9 @@ const Input = ({
           style={[
             styles.label,
             {
-              color: theme.colors.text,
+              color: loginStyle ? theme.colors.text : theme.colors.text,
               ...theme.typography.label,
+              marginBottom: 8,
             },
           ]}
         >
@@ -39,9 +84,10 @@ const Input = ({
         style={[
           styles.inputContainer,
           {
-            borderColor: error ? theme.colors.error : isFocused ? theme.colors.primary : theme.colors.border,
-            backgroundColor: theme.colors.cardBg,
+            borderColor: getBorderColor(),
+            backgroundColor: getBackgroundColor(),
             borderRadius: theme.borderRadius.md,
+            borderWidth: loginStyle ? 1 : 1,
           },
         ]}
       >
@@ -55,27 +101,32 @@ const Input = ({
           style={[
             styles.input,
             {
-              color: theme.colors.text,
+              color: getTextColor(),
               flex: 1,
             },
           ]}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor={theme.colors.textTertiary}
-          secureTextEntry={!showPassword && secureTextEntry}
+          placeholderTextColor={getPlaceholderColor()}
+          secureTextEntry={secureTextEntry && !showPassword}
           keyboardType={keyboardType}
           editable={editable}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
 
-        {secureTextEntry && (
+        {(secureTextEntry || showPasswordToggle) && (
           <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
+            onPress={handleTogglePassword}
             style={styles.iconRight}
+            activeOpacity={0.7}
           >
-            <Text style={styles.iconText}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
+            <Icon
+              name={showPassword ? 'eye' : 'eye-off'}
+              size={20}
+              color={loginStyle ? '#6b7280' : theme.colors.textSecondary}
+            />
           </TouchableOpacity>
         )}
       </View>
@@ -108,10 +159,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
+    minHeight: 48,
   },
   input: {
-    paddingVertical: 12,
+    paddingVertical: 14,
     fontSize: 16,
   },
   iconLeft: {

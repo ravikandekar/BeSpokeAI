@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import GalaxyBackground from '../components/GalaxyBackground';
 import ScreenWrapper from '../components/ScreenWrapper';
 import Button from '../components/Button';
 import { useAppStore } from '../store/useAppStore';
 
-const StatCard = ({ theme, icon, label, value }) => (
+const StatCard = ({ theme, iconName, label, value }) => (
   <View
     style={[
       styles.statCard,
@@ -16,7 +17,7 @@ const StatCard = ({ theme, icon, label, value }) => (
       },
     ]}
   >
-    <Text style={styles.statIcon}>{icon}</Text>
+    <Icon name={iconName} size={32} color={theme.colors.primary} style={styles.statIcon} />
     <Text style={[styles.statValue, { color: theme.colors.primary }]}>{value}</Text>
     <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>{label}</Text>
   </View>
@@ -27,35 +28,35 @@ const DashboardScreen = ({ theme }) => {
   const user = useAppStore((state) => state.user);
 
   const stats = [
-    { icon: '📞', label: 'Total Calls', value: '145' },
-    { icon: '👥', label: 'Contacts', value: '32' },
-    { icon: '✓', label: 'Completed', value: '128' },
-    { icon: '⏳', label: 'Pending', value: '17' },
+    { iconName: 'call', label: 'Total Calls', value: '145' },
+    { iconName: 'people', label: 'Contacts', value: '32' },
+    { iconName: 'checkmark-circle', label: 'Completed', value: '128' },
+    { iconName: 'time', label: 'Pending', value: '17' },
   ];
 
   const actions = [
-    { icon: '📞', label: 'Make Call', color: 'primary' },
-    { icon: '➕', label: 'Add Contact', color: 'secondary' },
-    { icon: '📊', label: 'Reports', color: 'primary' },
-    { icon: '⚙️', label: 'Settings', color: 'secondary' },
+    { iconName: 'call', label: 'Make Call', color: 'primary' },
+    { iconName: 'person-add', label: 'Add Contact', color: 'secondary' },
+    { iconName: 'bar-chart', label: 'Reports', color: 'primary' },
+    { iconName: 'settings', label: 'Settings', color: 'secondary' },
   ];
 
   return (
-    <ScreenWrapper 
+    <ScreenWrapper
       theme={theme}
       title={`Welcome, ${user?.name || 'User'}`}
       transparentHeader={true}
     >
-        <ScrollView
-          style={styles.container}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Welcome Header */}
-          <View style={styles.welcomeSection}>
-            <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-              Here's your overview
-            </Text>
-          </View>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Welcome Header */}
+        <View style={styles.welcomeSection}>
+          <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
+            Here's your overview
+          </Text>
+        </View>
 
         <View style={[styles.content, { paddingBottom: insets.bottom }]}>
           {/* Stats Grid */}
@@ -106,7 +107,12 @@ const DashboardScreen = ({ theme }) => {
                   },
                 ]}
               >
-                <Text style={styles.actionIcon}>{action.icon}</Text>
+                <Icon
+                  name={action.iconName}
+                  size={32}
+                  color={theme.colors.primary}
+                  style={styles.actionIcon}
+                />
                 <Text style={[styles.actionLabel, { color: theme.colors.text }]}>
                   {action.label}
                 </Text>
@@ -124,7 +130,7 @@ const DashboardScreen = ({ theme }) => {
               },
             ]}
           >
-            <Text style={[styles.infoIcon]}>💡</Text>
+            <Icon name="bulb" size={24} color={theme.colors.primary} style={styles.infoIcon} />
             <View style={styles.infoContent}>
               <Text style={[styles.infoTitle, { color: theme.colors.text }]}>
                 Tip of the Day
@@ -175,7 +181,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statIcon: {
-    fontSize: 32,
     marginBottom: 8,
   },
   statValue: {
@@ -202,7 +207,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   actionIcon: {
-    fontSize: 32,
     marginBottom: 8,
   },
   actionLabel: {
@@ -219,7 +223,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   infoIcon: {
-    fontSize: 24,
     marginRight: 12,
   },
   infoContent: {

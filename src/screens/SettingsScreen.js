@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import ScreenWrapper from '../components/ScreenWrapper';
 import Header from '../components/Header';
 import { useAppStore } from '../store/useAppStore';
 import { storage } from '../utils/storage';
 
-const SettingItem = ({ theme, icon, label, value, onPress, isSwitch, onValueChange }) => (
+const SettingItem = ({ theme, iconName, label, value, onPress, isSwitch, onValueChange }) => (
   <TouchableOpacity
     style={[
       styles.settingItem,
@@ -19,7 +20,7 @@ const SettingItem = ({ theme, icon, label, value, onPress, isSwitch, onValueChan
     disabled={isSwitch}
   >
     <View style={styles.settingLeft}>
-      <Text style={styles.settingIcon}>{icon}</Text>
+      <Icon name={iconName} size={20} color={theme.colors.primary} style={styles.settingIcon} />
       <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
         {label}
       </Text>
@@ -40,7 +41,7 @@ const SettingItem = ({ theme, icon, label, value, onPress, isSwitch, onValueChan
           <Text style={[styles.settingValue, { color: theme.colors.textSecondary }]}>
             {value}
           </Text>
-          <Text style={styles.arrow}>›</Text>
+          <Icon name="chevron-forward" size={16} color={theme.colors.textSecondary} />
         </>
       )}
     </View>
@@ -138,7 +139,7 @@ const SettingsScreen = ({ theme, navigation }) => {
 
           <SettingItem
             theme={theme}
-            icon="🌙"
+            iconName="moon"
             label="Dark Mode"
             value={isDarkMode}
             isSwitch
@@ -147,7 +148,7 @@ const SettingsScreen = ({ theme, navigation }) => {
 
           <SettingItem
             theme={theme}
-            icon="🔤"
+            iconName="text"
             label="Text Size"
             value="Medium"
             onPress={() => {}}
@@ -167,7 +168,7 @@ const SettingsScreen = ({ theme, navigation }) => {
 
           <SettingItem
             theme={theme}
-            icon="🔔"
+            iconName="notifications"
             label="Notifications"
             value="Enabled"
             onPress={() => {}}
@@ -175,7 +176,7 @@ const SettingsScreen = ({ theme, navigation }) => {
 
           <SettingItem
             theme={theme}
-            icon="🔐"
+            iconName="lock-closed"
             label="Privacy"
             value="Standard"
             onPress={() => {}}
@@ -195,7 +196,7 @@ const SettingsScreen = ({ theme, navigation }) => {
 
           <SettingItem
             theme={theme}
-            icon="🔑"
+            iconName="key"
             label="Change Password"
             value="Update Password"
             onPress={() => navigation.navigate('ChangePassword')}
@@ -203,7 +204,7 @@ const SettingsScreen = ({ theme, navigation }) => {
 
           <SettingItem
             theme={theme}
-            icon="ℹ️"
+            iconName="information-circle"
             label="About App"
             value="v1.0.0"
             onPress={() => {}}
@@ -219,7 +220,8 @@ const SettingsScreen = ({ theme, navigation }) => {
             ]}
             onPress={handleLogout}
           >
-            <Text style={styles.logoutText}>🚪 Logout</Text>
+            <Icon name="log-out" size={20} color="#ffffff" style={styles.logoutIcon} />
+            <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -289,7 +291,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   settingIcon: {
-    fontSize: 20,
     marginRight: 12,
   },
   settingLabel: {
@@ -300,22 +301,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 8,
+    gap: 8,
   },
   settingValue: {
     fontSize: 12,
-    marginRight: 8,
-  },
-  arrow: {
-    fontSize: 16,
-    color: '#999',
+    marginRight: 4,
   },
   logoutButton: {
+    flexDirection: 'row',
     borderRadius: 12,
     paddingVertical: 16,
     marginTop: 24,
     marginBottom: 16,
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 8,
+  },
+  logoutIcon: {
+    marginRight: 4,
   },
   logoutText: {
     color: '#ffffff',

@@ -70,14 +70,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     borderBottomWidth: 0.5,
     borderBottomColor: '#334155',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+  
   },
   headerContent: {
     flexDirection: 'row',
