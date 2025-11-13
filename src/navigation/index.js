@@ -18,6 +18,9 @@ import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import CustomHeader from '../components/CustomHeader';
 import TabIcon from '../components/TabIcon';
 
+// Utils
+import { storage } from '../utils/storage';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -198,7 +201,6 @@ export const RootNavigator = ({ theme }) => {
   const setDomain = require('../store/useAppStore').useAppStore((state) => state.setDomain);
   const setUser = require('../store/useAppStore').useAppStore((state) => state.setUser);
   const setIsDarkMode = require('../store/useAppStore').useAppStore((state) => state.setIsDarkMode);
-  const storage = require('../utils/storage').storage;
 
   React.useEffect(() => {
     bootstrapAsync();
